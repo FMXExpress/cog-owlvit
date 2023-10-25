@@ -1,0 +1,16 @@
+build:
+  gpu: true
+  python_version: "3.9"
+  cuda: "11.7"
+  system_packages:
+    - "zip"
+    - "libgl1-mesa-glx"
+  python_packages:
+    - numpy==1.26.0
+    - torch==2.0.0
+    - torchvision
+    - opencv-python==4.8.1.78
+    - transformers==4.34.0
+  run:
+    - curl -o /usr/local/bin/pget -L "https://github.com/replicate/pget/releases/download/v0.0.1/pget" && chmod +x /usr/local/bin/pget
+predict: "predict.py:Predictor"
