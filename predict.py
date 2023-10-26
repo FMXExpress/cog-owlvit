@@ -55,13 +55,14 @@ class Predictor(BasePredictor):
         slice = scores>=score_threshold
         boxes, scores, labels = boxes[slice,...], scores[slice,...], labels[slice,...]
 
-        font = cv2.FONT_HERSHEY_SIMPLEX
+        #font = cv2.FONT_HERSHEY_SIMPLEX
 
         json_data = {"objects": [],}  # label, confidence, bbox
         
         res_img = np.array(img)[:,:,::-1] # numpy image to draw on via cv2. reorder channels!
         result_img_path = "/tmp/result.png" if show_visualisation else None
-        
+
+        res_img[:] = (0, 0, 0)
         for box, score, label in zip(boxes, scores, labels):
             box = [int(i) for i in box.tolist()]
 
@@ -73,16 +74,19 @@ class Predictor(BasePredictor):
             json_data["objects"].append(data)
         
             if show_visualisation:
-                res_img = res_img.copy()
-                res_img = cv2.rectangle(res_img, box[:2], box[2:], (255,0,0), 2)
-                if box[3] + 25 > 768:
-                    y = box[3] - 10
-                else:
-                    y = box[3] + 25
+                # Draw white filled rectangles
+                res_img = cv2.rectangle(res_img, box[:2], box[2:], (255, 255, 255), -1)
+                
+                #res_img = res_img.copy()
+                #res_img = cv2.rectangle(res_img, box[:2], box[2:], (255,0,0), 2)
+                #if box[3] + 25 > 768:
+                #    y = box[3] - 10
+                #else:
+                #    y = box[3] + 25
 
-                res_img = cv2.putText(
-                    res_img, text_queries[label], (box[0], y), font, 1, (255,0,0), 2, cv2.LINE_AA
-                )
+                #res_img = cv2.putText(
+                #    res_img, text_queries[label], (box[0], y), font, 1, (255,0,0), 2, cv2.LINE_AA
+                #)
 
         if show_visualisation:
             cv2.imwrite(result_img_path, res_img)
