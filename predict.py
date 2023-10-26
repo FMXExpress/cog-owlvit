@@ -59,7 +59,8 @@ class Predictor(BasePredictor):
 
         json_data = {"objects": [],}  # label, confidence, bbox
         
-        res_img = np.array(img)[:,:,::-1] # numpy image to draw on via cv2. reorder channels!
+        #res_img = np.array(img)[:,:,::-1] # numpy image to draw on via cv2. reorder channels!
+        res_img = np.zeros_like(img)
         result_img_path = "/tmp/result.png" if show_visualisation else None
 
         res_img[:] = (0, 0, 0)
@@ -74,6 +75,7 @@ class Predictor(BasePredictor):
             json_data["objects"].append(data)
         
             if show_visualisation:
+                res_img = res_img.copy()
                 # Draw white filled rectangles
                 res_img = cv2.rectangle(res_img, box[:2], box[2:], (255, 255, 255), -1)
                 
